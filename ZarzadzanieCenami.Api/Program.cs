@@ -13,9 +13,11 @@ services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularClient", policy =>
+    options.AddPolicy("AllowFrontendClient", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // adres Angulara
+        policy.WithOrigins(
+            "http://localhost:4200",
+            "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -38,7 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAngularClient");
+app.UseCors("AllowFrontendClient");
 
 app.UseAuthorization();
 
