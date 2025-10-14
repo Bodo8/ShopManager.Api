@@ -50,12 +50,10 @@ namespace ZarzadzanieCenami.Api.Controllers
 
             var products = await _dbContext.Products
                 .Include(p => p.Prices)
-                .Include(p => p.Discounts)
-                .Where(p => p.Shops.Any(s => s.Id == shopId))
+                .Include(d => d.Discounts)
+                .Where(p => p.Shops.Any(s => s.Id == shopId)
+                            && p.Discounts.Any(d => d.Shops.Any(x => x.Id == shopId)))
                 .ToListAsync();
-
-            if (products == null || !products.Any())
-                return NotFound($"No products found for shopId = {shopId}.");
 
             return _mapper.Map<List<ProductDto>>(products);
         }
@@ -63,18 +61,24 @@ namespace ZarzadzanieCenami.Api.Controllers
         [HttpPost(nameof(AddProduct))]
         public async Task<ActionResult> AddProduct([FromBody] ProductRequest dto)
         {
-            Shop? shop = await _dbContext.Shops
-                .FirstOrDefaultAsync(s => s.Id == dto.ShopId);
+            if (dto == null || dto.ShopIds.Count == 0)
+                return BadRequest("Invalid product data or shopsId.");
 
-            if (shop == null)
-                return NotFound($"No shop found for shopId = {dto.ShopId}.");
+            List<int> shopIds = dto.ShopIds;
+
+            List<Shop> shops = await _dbContext.Shops
+                .Where(s => shopIds.Contains(s.Id))
+                .ToListAsync();
+
+            if (shops == null)
+                return NotFound($"No shop found for shopId = {string.Join(", ", shopIds)}.");
 
             Product product = new Product
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Prices = _mapper.Map<List<Price>>(dto.Prices),
-                Shops = new List<Shop> { shop }
+                Prices = _mapper.Map<List<Price>>(dto.PricesDtos),
+                Shops = shops
             };
 
             _dbContext.Products.Add(product);
@@ -85,14 +89,19 @@ namespace ZarzadzanieCenami.Api.Controllers
         [HttpPost(nameof(AddDiscount))]
         public async Task<ActionResult> AddDiscount([FromBody] DiscountRequest dto)
         {
-            Product? product = await _dbContext.Products
-                .FirstOrDefaultAsync(p => p.Id == dto.ProductId);
+            if (dto == null || dto.ShopIds.Count == 0 || dto.ProductIds.Count == 0)
+                return BadRequest("Invalid product data or shopsId.");
 
-            Shop? shop = await _dbContext.Shops
-                .FirstOrDefaultAsync(s => s.Id == dto.ShopId);
+            List<Product> products = await _dbContext.Products
+                .Where(p => dto.ProductIds.Contains(p.Id))
+                .ToListAsync();
 
-            if (product == null || shop == null)
-                return NotFound($"No shop or product found for shopId = {dto.ShopId} or productId = {dto.ProductId}.");
+            List<Shop> shops = await _dbContext.Shops
+                 .Where(s => dto.ShopIds.Contains(s.Id))
+                .ToListAsync();
+
+            if (products.Count == 0 || shops.Count == 0)
+                return NotFound($"No shop or product found for shopId = {string.Join(", ", dto.ShopIds)} or productId = {string.Join(", ", dto.ProductIds)}.");
 
             Discount discount = _mapper.Map<Discount>(dto);
 

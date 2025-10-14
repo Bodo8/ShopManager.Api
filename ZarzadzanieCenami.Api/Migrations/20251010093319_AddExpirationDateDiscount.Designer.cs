@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ZarzadzanieCenami.Api.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using ZarzadzanieCenami.Api.Infrastructure.Persistence;
 namespace ZarzadzanieCenami.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010093319_AddExpirationDateDiscount")]
+    partial class AddExpirationDateDiscount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,40 +24,6 @@ namespace ZarzadzanieCenami.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("DiscountProduct", b =>
-                {
-                    b.Property<int>("DiscountsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("discounts_id");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("products_id");
-
-                    b.HasKey("DiscountsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("discount_product");
-                });
-
-            modelBuilder.Entity("DiscountShop", b =>
-                {
-                    b.Property<int>("DiscountsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("discounts_id");
-
-                    b.Property<int>("ShopsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("shops_id");
-
-                    b.HasKey("DiscountsId", "ShopsId");
-
-                    b.HasIndex("ShopsId");
-
-                    b.ToTable("discount_shop");
-                });
 
             modelBuilder.Entity("ProductShop", b =>
                 {
@@ -123,7 +92,19 @@ namespace ZarzadzanieCenami.Api.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("percentage");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("ShopId")
+                        .HasColumnType("integer")
+                        .HasColumnName("shop_id");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ShopId");
 
                     b.ToTable("discounts");
                 });
@@ -201,36 +182,6 @@ namespace ZarzadzanieCenami.Api.Migrations
                     b.ToTable("shops");
                 });
 
-            modelBuilder.Entity("DiscountProduct", b =>
-                {
-                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Discount", null)
-                        .WithMany()
-                        .HasForeignKey("DiscountsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DiscountShop", b =>
-                {
-                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Discount", null)
-                        .WithMany()
-                        .HasForeignKey("DiscountsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Shop", null)
-                        .WithMany()
-                        .HasForeignKey("ShopsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ProductShop", b =>
                 {
                     b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Product", null)
@@ -257,6 +208,25 @@ namespace ZarzadzanieCenami.Api.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("ZarzadzanieCenami.Api.Domain.Entities.Discount", b =>
+                {
+                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Product", "Product")
+                        .WithMany("Discounts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("ZarzadzanieCenami.Api.Domain.Entities.Price", b =>
                 {
                     b.HasOne("ZarzadzanieCenami.Api.Domain.Entities.Product", "Product")
@@ -270,6 +240,8 @@ namespace ZarzadzanieCenami.Api.Migrations
 
             modelBuilder.Entity("ZarzadzanieCenami.Api.Domain.Entities.Product", b =>
                 {
+                    b.Navigation("Discounts");
+
                     b.Navigation("Prices");
                 });
 

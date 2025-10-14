@@ -6,7 +6,8 @@
 
         public string Description { get; set; } = null!;
         public decimal Percentage { get; set; }
-        public int ProductId { get; set; }
-        public int ShopId { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public List<int> ProductIds { get; set; }
+        public List<int> ShopIds { get; set; }
     }
 }
