@@ -9,7 +9,7 @@ namespace ZarzadzanieCenami.Api.Domain.Dto
 
         public string Description { get; set; }
         public List<PriceDto> Prices { get; set; } = new List<PriceDto>();
-        public List<DiscountDto> Discounts { get; set; } = new List<DiscountDto>();
-        public List<ShopDto> Shops { get; set; } = new List<ShopDto>();
+        public List<DiscountDto>? Discounts { get; set; }
+        public List<int> ShopIds { get; set; } = new List<int>();
     }
 }

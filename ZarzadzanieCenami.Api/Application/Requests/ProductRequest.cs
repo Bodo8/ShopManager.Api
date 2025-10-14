@@ -6,7 +6,8 @@ namespace ZarzadzanieCenami.Api.Application.Requests
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<PriceDto> Prices { get; set; } = new List<PriceDto>();
-        public int ShopId { get; set; }
+        public List<PriceDto> PricesDtos { get; set; } = new List<PriceDto>();
+        public List<int> ShopIds { get; set; } = new List<int>();
+        public List<DiscountDto>? DiscountDtos { get; set; }
     }
 }

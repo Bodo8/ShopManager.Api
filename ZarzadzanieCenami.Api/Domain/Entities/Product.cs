@@ -15,7 +15,7 @@ namespace ZarzadzanieCenami.Api.Domain.Entities
         [StringLength(120)]
         public string Description { get; set; } = null!;
         public ICollection<Price> Prices { get; set; } = new List<Price>();
-        public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
+        public ICollection<Discount>? Discounts { get; set; }
         public ICollection<Shop> Shops { get; set; } = new List<Shop>();
     }
 }

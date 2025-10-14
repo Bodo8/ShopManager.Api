@@ -10,10 +10,12 @@ namespace ZarzadzanieCenami.Api.Domain.Entities
         [Column(TypeName = "VARCHAR")]
         [StringLength(120)]
         public string Description { get; set; } = null!;
+
+        [Column(TypeName = "timestamp without time zone")]
+        public DateTime ExpirationDate { get; set; }
+
         public decimal Percentage { get; set; }
-        public Product Product { get; set; } = null!;
-        public int ProductId { get; set; }
-        public Shop Shop { get; set; } = null!;
-        public int ShopId { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Shop> Shops { get; set; } = new List<Shop>();
     }
 }
