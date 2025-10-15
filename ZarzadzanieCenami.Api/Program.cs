@@ -31,10 +31,10 @@ services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.MapGet("/config", () => new
-{
-    Connection = connectionString
-});
+//app.MapGet("/config", () => new
+//{
+//    Connection = connectionString
+//});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
