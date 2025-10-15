@@ -31,6 +31,11 @@ services.AddSwaggerGen();
 
 var app = builder.Build();
 
+//app.MapGet("/config", () => new
+//{
+//    Connection = connectionString
+//});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -38,7 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontendClient");
 

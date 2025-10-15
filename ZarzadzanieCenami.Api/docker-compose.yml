@@ -1,0 +1,16 @@
+
+services:
+  api:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: ZarzadzanieCenami.Api
+    ports:
+      - "8080:8080"
+    env_file:
+      - /home/admin/appfiles/zarzadzcenami/app.env
+    volumes:
+      - /home/admin/appfiles/zarzadzcenami/app.env:/app/app.env:ro
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    restart: unless-stopped
