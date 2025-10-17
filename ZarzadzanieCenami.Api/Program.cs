@@ -17,7 +17,10 @@ services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:4200",
-            "http://localhost:5173")
+            "http://localhost:5173",
+            "http://192.109.241.252:80",
+            "http://127.0.0.1:80",
+            "http://localhost:80")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
