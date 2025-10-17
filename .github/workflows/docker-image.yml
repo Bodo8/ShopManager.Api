@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/api:latest .
-          docker push ghcr.io/${{ github.repository_owner }}/api:latest
+          docker build -t ghcr.io/${{ github.repository_owner.toLowerCase() }}/api:latest .
+          docker push ghcr.io/${{ github.repository_owner.toLowerCase() }}/api:latest
 
       - name: SSH to VPS and redeploy
         uses: appleboy/ssh-action@v1.1.0
