@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ghcr.io/bodo8/api:latest .
+          docker build -t ghcr.io/bodo8/api:latest -f ZarzadzanieCenami.Api/
           docker push ghcr.io/bodo8/api:latest
 
       - name: SSH to VPS and redeploy
