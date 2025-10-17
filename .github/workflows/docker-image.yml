@@ -17,12 +17,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push image
         run: |
-          docker build -t ghcr.io/${{ toLower(github.repository_owner) }}/api:latest -f ZarzadzanieCenami.Api/Dockerfile ZarzadzanieCenami.Api/
-          docker push ghcr.io/${{ toLower(github.repository_owner) }}/api:latest
+          docker build -t ghcr.io/bodo8/api:latest -f ZarzadzanieCenami.Api/Dockerfile ZarzadzanieCenami.Api/
+          docker push ghcr.io/bodo8/api:latest
 
       - name: SSH to VPS and redeploy
         uses: appleboy/ssh-action@v1.1.0
