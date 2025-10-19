@@ -33,11 +33,14 @@ services:
     restart: always
     env_file:
       - /home/admin/appfiles/frontend/frontend.env
+    expose:
+      - "80"
     networks:
       - shop_manager_default
 
   nginx:
     image: nginx:alpine
+    container_name: shop_manager-nginx
     restart: always
     ports:
       - "80:80"
