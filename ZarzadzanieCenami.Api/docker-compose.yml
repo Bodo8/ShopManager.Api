@@ -1,16 +1,56 @@
-
 services:
+  db:
+    image: postgres:17
+    container_name: postgres_dock
+    restart: always
+    env_file:
+      - /home/admin/appfiles/postgres/db.env
+    volumes:
+      - /home/admin/docker/data/postgres:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    networks:
+      - shop_manager_default
+
   api:
-    build:
-        context: .
-        dockerfile: Dockerfile
-    container_name: ZarzadzanieCenami.Api
-    ports:
-      - "8080:8080"
+    image: ghcr.io/bodo8/api:latest
+    container_name: shop_manager-api
+    restart: always
     env_file:
       - /home/admin/appfiles/zarzadzcenami/app.env
-    volumes:
-      - /home/admin/appfiles/zarzadzcenami/app.env:/app/app.env:ro
     environment:
-      - ASPNETCORE_URLS=http://+:8080
-    restart: unless-stopped
+      - ASPNETCORE_URLS=http://+:5000
+    expose:
+      - "5000"
+    depends_on:
+      - db
+    networks:
+      - shop_manager_default
+
+  frontend:
+    image: ghcr.io/bodo8/frontend:latest
+    container_name: shop_manager-frontend
+    restart: always
+    env_file:
+      - /home/admin/appfiles/frontend/frontend.env
+    expose:
+      - "80"
+    networks:
+      - shop_manager_default
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /home/admin/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - shop_manager_default
+
+networks:
+  shop_manager_default:
+    driver: bridge 
