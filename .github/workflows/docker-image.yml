@@ -23,7 +23,7 @@ jobs:
         run: |
           docker build -t ghcr.io/bodo8/shop-api:latest -f ZarzadzanieCenami.Api/Dockerfile ZarzadzanieCenami.Api/
           docker push ghcr.io/bodo8/shop-api:latest
-
+    
       - name: SSH to VPS and redeploy
         uses: appleboy/ssh-action@v1.1.0
         with:
