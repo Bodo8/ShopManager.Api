@@ -11,7 +11,7 @@ namespace ZarzadzanieCenami.Api.Domain.Entities
         [StringLength(120)]
         public string Description { get; set; } = null!;
 
-        [Column(TypeName = "timestamp without time zone")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime ExpirationDate { get; set; }
 
         public decimal Percentage { get; set; }
