@@ -20,7 +20,8 @@ services.AddCors(options =>
             "http://localhost:5173",
             "http://192.109.241.252:80",
             "http://127.0.0.1:80",
-            "http://localhost:80")
+            "http://localhost:80",
+            "http://u259393.webh.me")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
